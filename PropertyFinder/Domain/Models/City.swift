@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Domain model representing a city
 struct City {
     let id: String
     let name: String

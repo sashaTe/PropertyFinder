@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Domain model representing a property with essential information
 struct Property: Identifiable {
     let id: String
     let name: String

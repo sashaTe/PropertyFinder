@@ -26,6 +26,7 @@ final class PropertyRepositoryTests: XCTestCase {
 
     // MARK: - Fetch Properties Tests
 
+    /// Test successful fetch of property list
     func testFetchProperties_Success() async throws {
         // Given
         let dto = PropertyListResponseDTO(properties: [PropertyListItemDTO.mock()])

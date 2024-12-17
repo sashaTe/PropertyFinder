@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// A data transfer object that represents city information
 struct CityDTO: Decodable {
     let id: String
     let name: String

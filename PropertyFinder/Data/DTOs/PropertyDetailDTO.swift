@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// A data transfer object that represents detailed property information
 struct PropertyDetailDTO: Decodable {
     let id: String
     let name: String

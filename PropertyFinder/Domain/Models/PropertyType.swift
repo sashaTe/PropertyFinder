@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Represents different types of properties available in the system
 enum PropertyType: String {
     case hostel = "HOSTEL"
     case hotel = "HOTEL"
@@ -14,6 +15,7 @@ enum PropertyType: String {
     case guesthouse = "GUESTHOUSE"
     case unrecognizedType
 
+    /// User-friendly display name for the property type
     var displayName: String {
         switch self {
         case .unrecognizedType: "Property"

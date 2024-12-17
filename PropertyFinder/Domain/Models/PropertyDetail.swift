@@ -6,6 +6,7 @@
 //
 import Foundation
 
+/// Domain model representing detailed property information
 struct PropertyDetail: Identifiable {
     let id: String
     let name: String
@@ -23,11 +24,13 @@ struct PropertyDetail: Identifiable {
     let depositPercentage: Int
     let associations: [String]
     let checkIn: CheckIn
-    
+
+    /// Represents a property's address with optional secondary line
     struct Address {
         let line1: String
         let line2: String?
-        
+
+        /// Combines address lines into a single string
         var fullAddress: String {
             if let line2, !line2.isEmpty {
                 return "\(line1), \(line2)"

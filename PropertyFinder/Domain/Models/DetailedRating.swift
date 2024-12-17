@@ -7,9 +7,13 @@
 
 import Foundation
 
+/// Represents detailed rating information with multiple categories
 struct DetailedRating {
+    /// Array of rating categories with individual scores
     let categories: [RatingCategory]
 
+    /// Creates DetailedRating from DTO, converting all categories
+    /// - Parameter dto: Data transfer object containing rating information
     init(dto: DetailedRatingDTO) {
         self.categories = [
             RatingCategory(name: "Overall", score: dto.overall ?? 0),
@@ -22,10 +26,15 @@ struct DetailedRating {
             RatingCategory(name: "Facilities", score: dto.facilities ?? 0)
         ]
     }
+    /// Represents a single rating category with score and formatting options
     struct RatingCategory: Equatable {
+        /// Name of the rating category
         let name: String
+
+        /// Raw score value (0-100)
         private let score: Int
 
+        /// Converts numerical score to descriptive rating
         var ratingComment: String {
             let rating = Double(score) / 10
             switch rating {
@@ -38,10 +47,12 @@ struct DetailedRating {
             }
         }
 
+        /// Converts score to progress value (0.0-1.0) for UI elements
         var progressValue: Double {
             score > 0 ? Double(score) / 100 : 0
         }
 
+        /// Formats score as decimal string (e.g., "8.5")
         var formattedScore: String {
             if score > 0 {
                 let decimal = Double(score) / 10

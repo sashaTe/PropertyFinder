@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Represents check-in time information for a property
 struct CheckIn {
     let startTime: String
     let endTime: String

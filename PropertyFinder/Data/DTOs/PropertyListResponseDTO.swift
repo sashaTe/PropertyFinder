@@ -7,18 +7,8 @@
 
 import Foundation
 
+/// A data transfer object that represents a list of properties response
 struct PropertyListResponseDTO: Decodable {
     let properties: [PropertyListItemDTO]
-}
-
-struct PropertyListItemDTO: Decodable {
-    let id: String
-    let name: String
-    let city: CityDTO
-    let latitude: String?
-    let longitude: String?
-    let type: String
-    let images: [ImageDTO]
-    let overallRating: RatingDTO?
 }
 

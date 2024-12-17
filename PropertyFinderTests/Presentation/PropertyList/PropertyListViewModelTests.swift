@@ -25,6 +25,7 @@ final class PropertyListViewModelTests: XCTestCase {
         super.tearDown()
     }
 
+    /// Tests successful properties fetch
     func testFetchProperties_Success() async {
         // Given
         let expectedProperties = [Property.mock()]
@@ -39,6 +40,7 @@ final class PropertyListViewModelTests: XCTestCase {
         XCTAssertNil(sut.error)
     }
 
+    /// Tests error handling during properties fetch
     func testFetchProperties_Error() async {
         // Given
         mockRepository.mockError = NetworkError.serverError(500)
@@ -52,6 +54,7 @@ final class PropertyListViewModelTests: XCTestCase {
         XCTAssertNotNil(sut.error)
     }
 
+    /// Tests loading state during properties fetch
     func testFetchProperties_LoadingState() async {
         // Given
         let expectedProperties = [Property.mock()]

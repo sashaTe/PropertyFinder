@@ -7,10 +7,18 @@
 
 import Foundation
 
+/// Represents geographical location with validation
 enum Location {
+    /// Location with valid coordinates
     case available(latitude: Double, longitude: Double)
+    
+    /// Location is not available or coordinates are invalid
     case unavailable
 
+    /// Creates Location instance with validation of coordinates
+    /// - Parameters:
+    ///   - latitude: Optional latitude ( Valid range: -90 to 90)
+    ///   - longitude: Optional longitude ( Valid range: -180 to 180)
     init(latitude: Double?, longitude: Double?) {
         guard let latitude,
               let longitude,
