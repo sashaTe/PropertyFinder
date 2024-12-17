@@ -10,7 +10,6 @@ import Foundation
 @MainActor
 final class PropertyListViewModel: ObservableObject {
     @Published private(set) var state: ViewState<[Property]> = .loading
-
     private let repository: PropertyRepositoryProtocol
 
     init(repository: PropertyRepositoryProtocol) {

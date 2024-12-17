@@ -9,10 +9,7 @@ import Foundation
 
 @MainActor
 class PropertyDetailViewModel: ObservableObject {
-    @Published private(set) var property: PropertyDetail?
-    @Published private(set) var isLoading = false
-    @Published private(set) var error: Error?
-
+    @Published private(set) var state: ViewState<PropertyDetail> = .loading
     private let propertyId: String
     private let repository: PropertyRepositoryProtocol
 
@@ -26,14 +23,13 @@ class PropertyDetailViewModel: ObservableObject {
     }
 
     func fetchPropertyDetail() async {
-        defer { isLoading = false }
-        isLoading = true
-        error = nil
+        state = .loading
 
         do {
-            property = try await repository.fetchPropertyDetail(id: propertyId)
+            let property = try await repository.fetchPropertyDetail(id: propertyId)
+            state = .loaded(property)
         } catch {
-            self.error = error
+            state = .error(error)
         }
     }
 }

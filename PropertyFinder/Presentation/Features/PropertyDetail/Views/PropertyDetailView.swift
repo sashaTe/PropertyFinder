@@ -15,15 +15,6 @@ struct PropertyDetailView: View {
     @State private var isSheetPresented = false
     @State private var activeTab: SheetTab = .about
 
-    /// Represents the current state of the view (loading, error, loaded, or empty).
-    private var viewState: ViewState<PropertyDetail> {
-        .from(
-            isLoading: viewModel.isLoading,
-            error: viewModel.error,
-            data: viewModel.property
-        )
-    }
-
     /// Initializes the `PropertyDetailView` with the necessary dependencies and property ID.
        /// - Parameters:
        ///   - container: The dependency container used to create the view model.
@@ -36,7 +27,7 @@ struct PropertyDetailView: View {
 
     var body: some View {
         VStack {
-            switch viewState {
+            switch viewModel.state {
             case .loading:
                 ProgressView()
             case .error(let error):
@@ -45,6 +36,13 @@ struct PropertyDetailView: View {
                 }
             case .loaded(let property):
                 propertyDetailContent(property)
+                    .sheet(isPresented: $isSheetPresented) {
+                        PropertyDetailSheet(
+                            isPresented: $isSheetPresented,
+                            activeTab: $activeTab,
+                            property: property
+                        )
+                    }
             case .empty:
                 EmptyStateView(message: "Property not found")
             }
@@ -62,13 +60,6 @@ struct PropertyDetailView: View {
                         .foregroundStyle(.text)
                 }
             }
-        }
-        .sheet(isPresented: $isSheetPresented) {
-            PropertyDetailSheet(
-                isPresented: $isSheetPresented,
-                activeTab: $activeTab,
-                property: viewModel.property
-            )
         }
     }
 }
