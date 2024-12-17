@@ -11,19 +11,8 @@ import SwiftUI
 struct PropertyList: View {
     @StateObject private var navigationCoordinator: DefaultNavigationCoordinator = DefaultNavigationCoordinator()
     @StateObject private var viewModel: PropertyListViewModel
-
-    private let container: DependencyContainerProtocol
-
     @State private var isMapActive = false
-
-    /// Represents the current state of the view (loading, error, loaded, or empty).
-    private var viewState: ViewState<[Property]> {
-        .from(
-            isLoading: viewModel.isLoading,
-            error: viewModel.error,
-            data: viewModel.properties.isEmpty ? nil : viewModel.properties
-        )
-    }
+    private let container: DependencyContainerProtocol
 
     init(container: DependencyContainerProtocol) {
         self.container = container
@@ -56,7 +45,7 @@ struct PropertyList: View {
     @ViewBuilder
     var mainContent: some View {
         Group {
-            switch viewState {
+            switch viewModel.state {
             case .loading:
                 ProgressView()
             case .error(let error):
@@ -100,8 +89,8 @@ extension PropertyList {
         switch route {
         case .propertyDetail(let id):
             PropertyDetailView(container: container, propertyId: id, navigationCoordinator: navigationCoordinator)
-        default:
-            EmptyView()
+        case .propertyList:
+            PropertyList(container: container)
         }
     }
 }

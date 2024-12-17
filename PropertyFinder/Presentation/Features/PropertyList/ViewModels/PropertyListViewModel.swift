@@ -9,9 +9,7 @@ import Foundation
 
 @MainActor
 final class PropertyListViewModel: ObservableObject {
-    @Published private(set) var properties: [Property] = []
-    @Published private(set) var isLoading = false
-    @Published private(set) var error: Error?
+    @Published private(set) var state: ViewState<[Property]> = .loading
 
     private let repository: PropertyRepositoryProtocol
 
@@ -20,14 +18,13 @@ final class PropertyListViewModel: ObservableObject {
     }
 
     func fetchProperties() async {
-        defer { isLoading = false }
-        isLoading = true
-        error = nil
+        state = .loading
 
         do {
-            properties = try await repository.fetchProperties(cityId: 1530)
+            let properties = try await repository.fetchProperties(cityId: 1530)
+            state = properties.isEmpty ? .empty : .loaded(properties)
         } catch {
-            self.error = error
+            state = .error(error)
         }
     }
 }
