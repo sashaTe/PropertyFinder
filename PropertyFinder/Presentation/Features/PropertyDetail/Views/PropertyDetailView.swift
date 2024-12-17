@@ -50,17 +50,7 @@ struct PropertyDetailView: View {
         .task {
             await viewModel.fetchPropertyDetail()
         }
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .navigation) {
-                Button {
-                    navigationCoordinator.navigateBack()
-                } label: {
-                    Image(systemName: "chevron.backward")
-                        .foregroundStyle(.text)
-                }
-            }
-        }
+        .modifier(PropertyDetailNavigation(navigationCoordinator: navigationCoordinator))
     }
 }
 
@@ -103,6 +93,7 @@ extension PropertyDetailView {
         isSheetPresented = true
     }
 }
+
 
 
 
