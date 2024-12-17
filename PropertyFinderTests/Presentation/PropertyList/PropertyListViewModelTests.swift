@@ -25,7 +25,12 @@ final class PropertyListViewModelTests: XCTestCase {
         super.tearDown()
     }
 
-    /// Tests successful properties fetch
+    /// Tests initial state is loading
+    func testInitialState_IsLoading() {
+        XCTAssertEqual(sut.state, .loading)
+    }
+
+    /// Tests successful properties fetch with data
     func testFetchProperties_Success() async {
         // Given
         let expectedProperties = [Property.mock()]
@@ -35,40 +40,45 @@ final class PropertyListViewModelTests: XCTestCase {
         await sut.fetchProperties()
 
         // Then
-        XCTAssertEqual(sut.properties, expectedProperties)
-        XCTAssertFalse(sut.isLoading)
-        XCTAssertNil(sut.error)
+        XCTAssertEqual(sut.state, .loaded(expectedProperties))
     }
 
-    /// Tests error handling during properties fetch
-    func testFetchProperties_Error() async {
+    /// Tests successful properties fetch with empty result
+    func testFetchProperties_EmptyResult() async {
         // Given
-        mockRepository.mockError = NetworkError.serverError(500)
+        mockRepository.mockProperties = []
 
         // When
         await sut.fetchProperties()
 
         // Then
-        XCTAssertTrue(sut.properties.isEmpty)
-        XCTAssertFalse(sut.isLoading)
-        XCTAssertNotNil(sut.error)
+        XCTAssertEqual(sut.state, .empty)
     }
 
-    /// Tests loading state during properties fetch
-    func testFetchProperties_LoadingState() async {
+    /// Tests error handling during properties fetch
+    func testFetchProperties_Error() async {
+        // Given
+        let expectedError = NetworkError.serverError(500)
+        mockRepository.mockError = expectedError
+
+        // When
+        await sut.fetchProperties()
+
+        // Then
+        XCTAssertEqual(sut.state, .error(expectedError))
+    }
+
+    /// Tests state transitions during properties fetch
+    func testFetchProperties_StateTransitions() async {
         // Given
         let expectedProperties = [Property.mock()]
         mockRepository.mockProperties = expectedProperties
 
-        // When
-        let task = Task {
-            XCTAssertFalse(sut.isLoading)
-            await sut.fetchProperties()
-            
-        // Then
-            XCTAssertFalse(sut.isLoading)
-        }
+        // When & Then
+        XCTAssertEqual(sut.state, .loading) // Initial state
 
-        await task.value
+        await sut.fetchProperties()
+
+        XCTAssertEqual(sut.state, .loaded(expectedProperties)) // Final state
     }
 }
