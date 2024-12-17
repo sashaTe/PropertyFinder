@@ -32,7 +32,6 @@ final class NavigationCoordinatorTests: XCTestCase {
 
         // Then
         XCTAssertEqual(sut.path.count, 1)
-        XCTAssertEqual(sut.path.count, 1)
     }
 
     /// Test back navigation removes the last route from path
