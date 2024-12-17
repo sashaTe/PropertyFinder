@@ -12,18 +12,17 @@ final class DependencyContainer: DependencyContainerProtocol {
     /// Shared repository instance for accessing property data
     let repository: PropertyRepositoryProtocol
 
-    @MainActor
     init() {
         let networkService = NetworkService()
 
         self.repository = PropertyRepository(networkService: networkService)
     }
 
-    @MainActor func makePropertyListViewModel() -> PropertyListViewModel {
+    func makePropertyListViewModel() -> PropertyListViewModel {
         PropertyListViewModel(repository: repository)
     }
 
-    @MainActor func makePropertyDetailViewModel(propertyId: String) -> PropertyDetailViewModel {
+    func makePropertyDetailViewModel(propertyId: String) -> PropertyDetailViewModel {
         PropertyDetailViewModel(
             propertyId: propertyId,
             repository: repository
