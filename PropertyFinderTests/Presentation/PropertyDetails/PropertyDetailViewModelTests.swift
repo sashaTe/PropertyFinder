@@ -25,6 +25,11 @@ final class PropertyDetailViewModelTests: XCTestCase {
         super.tearDown()
     }
 
+    /// Tests initial state is loading
+    func testInitialState_IsLoading() {
+        XCTAssertEqual(sut.state, .loading)
+    }
+
     /// Tests successful property detail fetch
     func testFetchPropertyDetail_Success() async {
         // Given
@@ -34,40 +39,34 @@ final class PropertyDetailViewModelTests: XCTestCase {
         // When
         await sut.fetchPropertyDetail()
 
-        XCTAssertEqual(sut.property, expectedProperty)
-        XCTAssertFalse(sut.isLoading)
-        XCTAssertNil(sut.error)
+        // Then
+        XCTAssertEqual(sut.state, .loaded(expectedProperty))
     }
 
     /// Tests error handling during property detail fetch
     func testFetchPropertyDetail_Error() async {
         // Given
-        mockRepository.mockError = NetworkError.invalidResponse
+        let expectedError = NetworkError.invalidResponse
+        mockRepository.mockError = expectedError
 
         // When
         await sut.fetchPropertyDetail()
 
-        XCTAssertNil(sut.property)
-        XCTAssertFalse(sut.isLoading)
-        XCTAssertNotNil(sut.error)
+        // Then
+        XCTAssertEqual(sut.state, .error(expectedError))
     }
 
-    /// Tests loading state during property detail fetch
-    func testFetchPropertyDetail_LoadingState() async {
+    /// Tests state transitions during property detail fetch
+    func testFetchPropertyDetail_StateTransitions() async {
         // Given
         let expectedProperty = PropertyDetail.mock()
         mockRepository.mockPropertyDetail = expectedProperty
 
-        // When
-        let task = Task {
-            XCTAssertFalse(sut.isLoading)
-            await sut.fetchPropertyDetail()
-            
-            // Then
-            XCTAssertFalse(sut.isLoading)
-        }
+        // When & Then
+        XCTAssertEqual(sut.state, .loading) // Initial state
 
-        await task.value
+        await sut.fetchPropertyDetail()
+
+        XCTAssertEqual(sut.state, .loaded(expectedProperty)) // Final state
     }
-
 }
