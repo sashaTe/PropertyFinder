@@ -5,7 +5,7 @@ A SwiftUI test assignment that demonstrates modern iOS development practices thr
 ## Requirements Implementation
 
 ### Property List Screen ✓
-Required features implemented (see [PropertyList.swift](PropertyFinder/Presentation/Features/PropertyList/Views/PropertyList/PropertyList.swift)):
+Required features implemented (see [PropertyList.swift](PropertyFinder/Presentation/Features/PropertyList/Views/PropertyList.swift)):
 - Property listing with name, type, city and rating
 - Thumbnail images with async loading and placeholders
 - Toggle between list and map views
@@ -23,95 +23,63 @@ Required features implemented (see [PropertyDetailView.swift](PropertyFinder/Pre
 ## Technical Implementation
 
 ### Architecture
+### Architecture
+
 The app follows Clean Architecture principles with MVVM pattern:
 
-```mermaid
-graph TB
-    classDef appLayer fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
-    classDef dataLayer fill:#fbe9e7,stroke:#bf360c,stroke-width:2px
-    classDef diLayer fill:#e8eaf6,stroke:#1a237e,stroke-width:2px
-    classDef domainLayer fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef presentationLayer fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+#### Presentation Layer
+- **Views**: SwiftUI views responsible for UI rendering
+  - PropertyList and PropertyDetail as main screens
+  - Reusable components (ImageCarousel, MapView)
+  - Sheet presentations for additional content
 
-    subgraph "App"
-        PFA[PropertyFinderApp]:::appLayer
-    end
+- **ViewModels**: Handle presentation logic and state management
+  - Use @Published properties with ViewState pattern
+  - Manage loading, error, and success states
+  - Communicate with repositories through protocols
 
-    subgraph "Data"
-        NS[NetworkService]:::dataLayer
-        RP[PropertyRepository]:::dataLayer
-        DTOs[DTOs]:::dataLayer
-    end
+#### Domain Layer
+- **Models**: Core business models
+  - Property for list items
+  - PropertyDetail for detailed information
+  - Location for mapping functionality
 
-    subgraph "DI"
-        DC[DependencyContainer]:::diLayer
-    end
+- **Protocols**: Define contracts between layers
+  - PropertyRepositoryProtocol for data access
+  - NavigationCoordinator for navigation
+  - DependencyContainerProtocol for DI
 
-    subgraph "Domain"
-        DM[Domain Models]:::domainLayer
-    end
+#### Infrastructure Layer
+- **Navigation**: Centralized navigation system
+  - DefaultNavigationCoordinator for managing navigation stack
+  - AppRoute enum for type-safe routing
+  - Sheet presentation coordination
 
-    subgraph "Presentation"
-        direction TB
-        subgraph "Features"
-            Views[Views]:::presentationLayer
-            VMs[ViewModels]:::presentationLayer
-        end
-        NC[NavigationCoordinator]:::presentationLayer
-    end
+- **Dependency Injection**: Container-based DI
+  - Protocol-based dependency registration
+  - Factory methods for ViewModels
+  - Testability through protocol abstractions
 
-    %% Essential connections
-    PFA --> DC
-    PFA --> Views
-    DC --> RP
-    DC --> VMs
-    Views --> VMs
-    Views --> NC
-    VMs --> RP
-    DTOs --> DM
-    RP --> DM
-    VMs --> DM
-```
+#### Key Architectural Decisions:
+1. **State Management**
+   - ViewState enum for consistent state handling
+   - Loading, error, empty, and loaded states
+   - Type-safe data association
 
-### Testing
-Comprehensive test coverage including:
+2. **Navigation**
+   - Coordinator pattern implementation
+   - Centralized navigation control
+   - Type-safe routing with AppRoute
 
-#### ViewModel Tests ([PropertyDetailViewModelTests.swift](PropertyFinderTests/Presentation/PropertyDetails/PropertyDetailViewModelTests.swift))
-- Success scenarios
-- Error handling
-- Loading states
-- State management
-- Data flow
+3. **Dependency Injection**
+   - Protocol-based container
+   - Easy testing through mocking
+   - Clear dependency graph
 
-#### Repository Tests ([PropertyRepositoryTests.swift](PropertyFinderTests/Data/Repository/PropertyRepositoryTests.swift))
-- Network error handling
-- Data mapping
-- API integration
-- Mock responses
-- Call counting
-
-#### Network Tests ([NetworkServiceTests.swift](PropertyFinderTests/Data/Network/NetworkServiceTests.swift))
-- API endpoint testing
-- Response parsing
-- Error scenarios
-- HTTP status handling
-- Mock URL Protocol
-
-#### Navigation Tests ([NavigationCoordinatorTests.swift](PropertyFinderTests/Presentation/Navigation/NavigationCoordinatorTests.swift))
-- Route handling
-- Navigation stack management
-- Back navigation
-- Deep linking
-
-#### ViewState Tests ([ViewStateTests.swift](PropertyFinderTests/Presentation/Common/ViewStateTests.swift))
-- Loading state
-- Error state
-- Empty state
-- Data loaded state
-- State transitions
-
-
-All tests follow the Given-When-Then pattern and use mocking for dependencies.
+4. **Testing Strategy**
+   - Unit tests for ViewModels
+   - Navigation testing
+   - Mock repositories for data testing
 
 ## Technical Highlights
 - SwiftUI for modern UI development
