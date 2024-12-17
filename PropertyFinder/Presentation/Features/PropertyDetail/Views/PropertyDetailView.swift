@@ -54,6 +54,8 @@ struct PropertyDetailView: View {
     }
 }
 
+// MARK: - Content Views
+
 extension PropertyDetailView {
     /// The detailed content of the property view.
     /// - Parameter property: The property details to display.
@@ -84,6 +86,8 @@ extension PropertyDetailView {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+
+// MARK: - Sheet Handling
 
 extension PropertyDetailView {
     /// Presents the sheet for the specified tab.
